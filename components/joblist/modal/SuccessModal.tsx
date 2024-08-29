@@ -1,6 +1,9 @@
+"use client"; 
+
 import React from "react";
 import { Modal, Button } from "antd";
 import Image from "next/image";
+import { useRouter } from "next/navigation";  
 
 interface SuccessModalProps {
   isVisible: boolean;
@@ -8,11 +11,25 @@ interface SuccessModalProps {
 }
 
 const SuccessModal: React.FC<SuccessModalProps> = ({ isVisible, onClose }) => {
+  const router = useRouter();
+
+  const handleGoToJobPost = () => {
+    onClose(); 
+    router.push("/job-detail"); 
+  };
+
   return (
     <Modal
       open={isVisible}
       onCancel={onClose}
-      footer={null} 
+      footer={[
+        <Button key="close" onClick={onClose}>
+          Close
+        </Button>,
+        <Button key="jobPost" type="primary" onClick={handleGoToJobPost}>
+          Go to job post
+        </Button>,
+      ]}
     >
       <div className="flex flex-col items-center">
         <Image
@@ -20,18 +37,10 @@ const SuccessModal: React.FC<SuccessModalProps> = ({ isVisible, onClose }) => {
           alt="Success"
           width={64}
           height={64}
-          className="mb-4"
+          className="mb-4 mx-auto"
         />
         <h2 className="text-lg font-semibold">Successfully created!</h2>
-        <p className="text-center mb-4">Go to your job post to upload CVs for analyzing</p>
-        <div className="flex space-x-4">
-          <Button key="close" onClick={onClose} className="border-gray-300">
-            Close
-          </Button>
-          <Button key="jobPost" type="primary" onClick={() => {/* Navigation to job post*/}}>
-            Go to job post
-          </Button>
-        </div>
+        <p>Go to your job post to upload CVs for analyzing</p>
       </div>
     </Modal>
   );

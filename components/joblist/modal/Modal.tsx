@@ -55,6 +55,7 @@ const CustomModal: React.FC<CustomModalProps> = ({ isVisible, onCancel, onContin
           placeholder="e.g. Frontend Engineer"
           value={jobTitle}
           onChange={(e) => setJobTitle(e.target.value)}
+          style={{marginBottom: "1rem" }}
         />
 
         <label>Seniority</label>

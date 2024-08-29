@@ -1,91 +1,98 @@
-"use client";
+import React, { useState } from "react";
+import { Modal, Input, Select, Button } from "antd";
 
-import React, { useState, useEffect } from "react";
-import { Modal as AntdModal, Button, Input, Select, Form } from "antd";
-
-interface ModalProps {
-  isVisible: boolean;
-  onCancel: () => void;
-  onContinue: () => void;
+interface Job {
+  id: string;
+  title: string;
+  seniority: string;
+  jobType: string;
+  description: string;
 }
 
-const { Option } = Select;
+interface CustomModalProps {
+  isVisible: boolean;
+  onCancel: () => void;
+  onContinue: (jobData: Job) => void;
+}
 
-const Modal: React.FC<ModalProps> = ({ isVisible, onCancel, onContinue }) => {
+const CustomModal: React.FC<CustomModalProps> = ({ isVisible, onCancel, onContinue }) => {
   const [jobTitle, setJobTitle] = useState("");
   const [seniority, setSeniority] = useState("");
   const [jobType, setJobType] = useState("");
-  const [jobPostText, setJobPostText] = useState("");
-  const [isContinueDisabled, setIsContinueDisabled] = useState(true);
+  const [jobDescription, setJobDescription] = useState("");
 
-  useEffect(() => {
-    // Check if all fields are filled
-    if (jobTitle && seniority && jobType && jobPostText) {
-      setIsContinueDisabled(false);
-    } else {
-      setIsContinueDisabled(true);
+  const isContinueDisabled = !jobTitle || !seniority || !jobType || !jobDescription;
+
+  const handleContinue = () => {
+    if (!isContinueDisabled) {
+      onContinue({
+        id: "", // The ID will be set in the parent component
+        title: jobTitle,
+        seniority,
+        jobType,
+        description: jobDescription,
+      });
     }
-  }, [jobTitle, seniority, jobType, jobPostText]);
+  };
 
   return (
-    <AntdModal
-      open={isVisible} // Use `open` for Ant Design v5
+    <Modal
+      visible={isVisible}
       onCancel={onCancel}
-      footer={null}
-      centered
+      footer={[
+        <Button key="cancel" onClick={onCancel}>
+          Cancel
+        </Button>,
+        <Button key="continue" type="primary" onClick={handleContinue} disabled={isContinueDisabled}>
+          Continue
+        </Button>,
+      ]}
+      title="Create a job post"
     >
-      <h2>Create a job post</h2>
-      <Form layout="vertical">
-        <Form.Item label="Job title" required>
-          <Input
-            placeholder="e.g., Frontend Engineer"
-            value={jobTitle}
-            onChange={(e) => setJobTitle(e.target.value)}
-          />
-        </Form.Item>
-        <Form.Item label="Seniority" required>
-          <Select
-            placeholder="Select seniority"
-            value={seniority}
-            onChange={(value) => setSeniority(value)}
-          >
-            <Option value="junior">Junior</Option>
-            <Option value="middle">Middle</Option>
-            <Option value="senior">Senior</Option>
-          </Select>
-        </Form.Item>
-        <Form.Item label="Job type" required>
-          <Select
-            placeholder="Select job type"
-            value={jobType}
-            onChange={(value) => setJobType(value)}
-          >
-            <Option value="remote">Remote</Option>
-            <Option value="onsite">Onsite</Option>
-            <Option value="hybrid">Hybrid</Option>
-          </Select>
-        </Form.Item>
-        <Form.Item label="Job post text" required>
-          <Input.TextArea
-            placeholder="Paste your job post text here"
-            value={jobPostText}
-            onChange={(e) => setJobPostText(e.target.value)}
-          />
-        </Form.Item>
-        <div className="flex justify-end mt-4">
-          <Button onClick={onCancel}>Cancel</Button>
-          <Button
-            type="primary"
-            onClick={onContinue}
-            disabled={isContinueDisabled}
-            className="ml-2"
-          >
-            Continue
-          </Button>
-        </div>
-      </Form>
-    </AntdModal>
+      <div>
+        <label>Job title</label>
+        <Input
+          placeholder="e.g. Frontend Engineer"
+          value={jobTitle}
+          onChange={(e) => setJobTitle(e.target.value)}
+        />
+
+        <label>Seniority</label>
+        <Select
+          placeholder="Select seniority"
+          value={seniority}
+          onChange={(value) => setSeniority(value)}
+          options={[
+            { value: "Junior", label: "Junior" },
+            { value: "Mid", label: "Mid" },
+            { value: "Senior", label: "Senior" },
+          ]}
+          style={{ width: "100%", marginBottom: "1rem" }}
+        />
+
+        <label>Job type</label>
+        <Select
+          placeholder="Select job type"
+          value={jobType}
+          onChange={(value) => setJobType(value)}
+          options={[
+            { value: "Remote", label: "Remote" },
+            { value: "On-site", label: "On-site" },
+            { value: "Hybrid", label: "Hybrid" },
+          ]}
+          style={{ width: "100%", marginBottom: "1rem" }}
+        />
+
+        <label>Job post text</label>
+        <Input.TextArea
+          placeholder="Paste your job post text here"
+          value={jobDescription}
+          onChange={(e) => setJobDescription(e.target.value)}
+          rows={4}
+        />
+      </div>
+    </Modal>
   );
 };
 
-export default Modal;
+export default CustomModal;

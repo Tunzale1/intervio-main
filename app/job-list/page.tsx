@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import CustomModal from "@/components/joblist/modal/Modal";  // Updated import
+import CustomModal from "@/components/joblist/modal/Modal";
 import LoadingModal from "@/components/joblist/modal/LoadingModal";
 import SuccessModal from "@/components/joblist/modal/SuccessModal";
 import JoblistInner from "@/components/joblist/JoblistInner";
@@ -9,10 +9,19 @@ import MainLayout from "@/components/layout/Layout";
 import { PlusOutlined } from "@ant-design/icons";
 import { Breadcrumb, Button } from "antd";
 
+interface Job {
+  id: string;
+  title: string;
+  seniority: string;
+  jobType: string;
+  description: string;
+}
+
 const Index = () => {
   const [isModalVisible, setModalVisible] = useState(false);
   const [isLoadingModalVisible, setLoadingModalVisible] = useState(false);
   const [isSuccessModalVisible, setSuccessModalVisible] = useState(false);
+  const [jobs, setJobs] = useState<Job[]>([]);
 
   const handleCreateNewClick = () => {
     setModalVisible(true);
@@ -22,15 +31,15 @@ const Index = () => {
     setModalVisible(false);
   };
 
-  const handleContinueClick = () => {
+  const handleContinueClick = (jobData: Job) => {  // Make sure to accept jobData
     setModalVisible(false);
     setLoadingModalVisible(true);
 
-    // Simulate loading process
     setTimeout(() => {
       setLoadingModalVisible(false);
       setSuccessModalVisible(true);
-    }, 3000); // 3 seconds for loading
+      setJobs((prevJobs) => [...prevJobs, { ...jobData, id: new Date().toISOString() }]);
+    }, 3000);
   };
 
   const handleLoadingModalCancel = () => {
@@ -63,20 +72,20 @@ const Index = () => {
           </Button>
         </div>
         <div className="w-full mt-6">
-          <JoblistInner />
+          <JoblistInner jobs={jobs} />
         </div>
       </div>
       <CustomModal
-        isVisible={isModalVisible}  // Changed to 'isVisible'
+        isVisible={isModalVisible}
         onCancel={handleModalCancel}
-        onContinue={handleContinueClick}
+        onContinue={handleContinueClick}  // Correct function signature
       />
       <LoadingModal
-        isVisible={isLoadingModalVisible}  // Changed to 'isVisible'
+        isVisible={isLoadingModalVisible}
         onCancel={handleLoadingModalCancel}
       />
       <SuccessModal
-        isVisible={isSuccessModalVisible}  // Changed to 'isVisible'
+        isVisible={isSuccessModalVisible}
         onClose={handleSuccessModalClose}
       />
     </MainLayout>

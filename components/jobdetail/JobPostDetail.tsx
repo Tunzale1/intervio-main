@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { Breadcrumb, Button, Tag } from "antd";
 import UploadModal from "./UploadModal";
 import JobApplications from "./JobApplications";
-import InterviewsTab from "./JobInterviews"; // Import the new InterviewsTab component
+import InterviewsTab from "./JobInterviews";
 
 // Mock data
 const jobData = [

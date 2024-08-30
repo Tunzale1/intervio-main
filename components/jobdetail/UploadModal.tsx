@@ -7,7 +7,7 @@ interface UploadModalProps {
   isModalOpen: boolean;
   handleOk: () => void;
   handleCancel: () => void;
-  onSuccessClose: () => void; // Callback for when the success modal is closed
+  onSuccessClose: () => void; 
 }
 
 const UploadModal: React.FC<UploadModalProps> = ({
@@ -36,7 +36,7 @@ const UploadModal: React.FC<UploadModalProps> = ({
 
   const closeSuccessModal = () => {
     setIsSuccessModalOpen(false);
-    onSuccessClose(); // Trigger the callback when success modal is closed
+    onSuccessClose(); 
   };
 
   const handleCheckboxChange = (e: { target: { checked: boolean }; }) => {

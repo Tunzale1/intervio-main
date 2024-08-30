@@ -2,9 +2,9 @@
 
 import React, { useState } from "react";
 import { Breadcrumb, Button, Tag } from "antd";
-import { TeamOutlined } from "@ant-design/icons";
 import UploadModal from "./UploadModal";
-import JobApplications from "./JobApplications"; // New component for applications tab
+import JobApplications from "./JobApplications";
+import InterviewsTab from "./JobInterviews"; // Import the new InterviewsTab component
 
 // Mock data
 const jobData = [
@@ -68,30 +68,23 @@ function JobPostDetail() {
       {/* Tabs */}
       <div className="mt-8">
         <div className="flex space-x-6 border-b-2 border-gray-200">
-          <div
-            className={`px-0 text-lg cursor-pointer ${activeTab === 'Applications' ? 'border-b-2 border-blue-500' : ''}`}
-            onClick={() => setActiveTab('Applications')}
-          >
-            <Button type="text" style={{ color: activeTab === 'Applications' ? '#1677FF' : '#4b5563', fontWeight: activeTab === 'Applications' ? '600' : 'normal' }}>
-              Applications
-            </Button>
-          </div>
-          <div
-            className={`px-0 text-lg cursor-pointer ${activeTab === 'Interviews' ? 'border-b-2 border-blue-500' : ''}`}
-            onClick={() => setActiveTab('Interviews')}
-          >
-            <Button type="text" style={{ color: activeTab === 'Interviews' ? '#1677FF' : '#4b5563', fontWeight: activeTab === 'Interviews' ? '600' : 'normal' }}>
-              Interviews
-            </Button>
-          </div>
-          <div
-            className={`px-0 text-lg cursor-pointer ${activeTab === 'Job details' ? 'border-b-2 border-blue-500' : ''}`}
-            onClick={() => setActiveTab('Job details')}
-          >
-            <Button type="text" style={{ color: activeTab === 'Job details' ? '#1677FF' : '#4b5563', fontWeight: activeTab === 'Job details' ? '600' : 'normal' }}>
-              Job details
-            </Button>
-          </div>
+          {['Applications', 'Interviews', 'Job details'].map((tab) => (
+            <div
+              key={tab}
+              className={`px-0 text-lg cursor-pointer ${activeTab === tab ? 'border-b-2 border-blue-500' : ''}`}
+              onClick={() => setActiveTab(tab)}
+            >
+              <Button 
+                type="text" 
+                style={{ 
+                  color: activeTab === tab ? '#1677FF' : '#4b5563', 
+                  fontWeight: activeTab === tab ? '600' : 'normal' 
+                }}
+              >
+                {tab}
+              </Button>
+            </div>
+          ))}
         </div>
 
         {/* Content based on active tab */}
@@ -99,9 +92,7 @@ function JobPostDetail() {
           <JobApplications isSuccessComplete={isSuccessComplete} showModal={showModal} />
         )}
         {activeTab === 'Interviews' && (
-          <div className="mt-12">
-            <p className="text-lg text-gray-600">Interviews will be displayed here.</p>
-          </div>
+          <InterviewsTab />
         )}
         {activeTab === 'Job details' && (
           <div className="mt-12">

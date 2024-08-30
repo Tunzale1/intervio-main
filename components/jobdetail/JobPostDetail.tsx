@@ -3,8 +3,8 @@
 import React, { useState } from "react";
 import { Breadcrumb, Button, Tag } from "antd";
 import { TeamOutlined } from "@ant-design/icons";
-import Image from "next/image";
 import UploadModal from "./UploadModal";
+import JobApplications from "./JobApplications"; // New component for applications tab
 
 // Mock data
 const jobData = [
@@ -22,11 +22,8 @@ const jobData = [
 function JobPostDetail() {
   const job = jobData[0];
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isLoadingModalOpen, setIsLoadingModalOpen] = useState(false);
-  const [isChecked, setIsChecked] = useState(false);
-  const [progress, setProgress] = useState(0);
   const [activeTab, setActiveTab] = useState('Applications');
-  const [isSuccessComplete, setIsSuccessComplete] = useState(false); // New state
+  const [isSuccessComplete, setIsSuccessComplete] = useState(false);
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -34,33 +31,14 @@ function JobPostDetail() {
 
   const handleOk = () => {
     setIsModalOpen(false);
-    setIsLoadingModalOpen(true);
-    simulateProgress();
   };
 
   const handleCancel = () => {
     setIsModalOpen(false);
   };
 
-  const handleCheckboxChange = (e: { target: { checked: boolean }; }) => {
-    setIsChecked(e.target.checked);
-  };
-
-  const simulateProgress = () => {
-    let currentProgress = 0;
-    const interval = setInterval(() => {
-      currentProgress += 20;
-      setProgress(currentProgress);
-      if (currentProgress >= 100) {
-        clearInterval(interval);
-        setIsLoadingModalOpen(false);
-        setIsSuccessComplete(true); // Set success as complete
-      }
-    }, 600);
-  };
-
   const handleSuccessClose = () => {
-    setIsSuccessComplete(true); // Set success as complete when success modal is closed
+    setIsSuccessComplete(true);
   };
 
   return (
@@ -90,17 +68,26 @@ function JobPostDetail() {
       {/* Tabs */}
       <div className="mt-8">
         <div className="flex space-x-6 border-b-2 border-gray-200">
-          <div className={`px-0 text-lg cursor-pointer ${activeTab === 'Applications' ? 'border-b-2 border-blue-500' : ''}`} onClick={() => setActiveTab('Applications')}>
+          <div
+            className={`px-0 text-lg cursor-pointer ${activeTab === 'Applications' ? 'border-b-2 border-blue-500' : ''}`}
+            onClick={() => setActiveTab('Applications')}
+          >
             <Button type="text" style={{ color: activeTab === 'Applications' ? '#1677FF' : '#4b5563', fontWeight: activeTab === 'Applications' ? '600' : 'normal' }}>
               Applications
             </Button>
           </div>
-          <div className={`px-0 text-lg cursor-pointer ${activeTab === 'Interviews' ? 'border-b-2 border-blue-500' : ''}`} onClick={() => setActiveTab('Interviews')}>
+          <div
+            className={`px-0 text-lg cursor-pointer ${activeTab === 'Interviews' ? 'border-b-2 border-blue-500' : ''}`}
+            onClick={() => setActiveTab('Interviews')}
+          >
             <Button type="text" style={{ color: activeTab === 'Interviews' ? '#1677FF' : '#4b5563', fontWeight: activeTab === 'Interviews' ? '600' : 'normal' }}>
               Interviews
             </Button>
           </div>
-          <div className={`px-0 text-lg cursor-pointer ${activeTab === 'Job details' ? 'border-b-2 border-blue-500' : ''}`} onClick={() => setActiveTab('Job details')}>
+          <div
+            className={`px-0 text-lg cursor-pointer ${activeTab === 'Job details' ? 'border-b-2 border-blue-500' : ''}`}
+            onClick={() => setActiveTab('Job details')}
+          >
             <Button type="text" style={{ color: activeTab === 'Job details' ? '#1677FF' : '#4b5563', fontWeight: activeTab === 'Job details' ? '600' : 'normal' }}>
               Job details
             </Button>
@@ -109,19 +96,7 @@ function JobPostDetail() {
 
         {/* Content based on active tab */}
         {activeTab === 'Applications' && (
-          <div className="mt-12 flex flex-col items-center">
-             <p className="text-lg text-gray-600 mt-4">
-              {isSuccessComplete ? "Hello World" : "No applications found"}
-            </p>
-            {!isSuccessComplete && (
-            <TeamOutlined style={{ fontSize: "48px", color: "#ccc" }} />
-            )}
-            {!isSuccessComplete && (
-              <Button type="default" className="mt-4" onClick={showModal}>
-                + Upload CV
-              </Button>
-            )}
-          </div>
+          <JobApplications isSuccessComplete={isSuccessComplete} showModal={showModal} />
         )}
         {activeTab === 'Interviews' && (
           <div className="mt-12">
@@ -140,7 +115,7 @@ function JobPostDetail() {
         isModalOpen={isModalOpen}
         handleOk={handleOk}
         handleCancel={handleCancel}
-        onSuccessClose={handleSuccessClose} // Pass the callback to the modal
+        onSuccessClose={handleSuccessClose}
       />
     </div>
   );

@@ -2,9 +2,10 @@
 
 import React, { useState } from "react";
 import { Breadcrumb, Button, Tag } from "antd";
-import UploadModal from "./UploadModal";
-import JobApplications from "./JobApplications";
-import InterviewsTab from "./JobInterviews";
+import UploadModal from "./application/UploadModal";
+import JobApplications from "./application/JobApplications";
+import InterviewsTab from "./interview/JobInterviews";
+import JobDetails from "./job details/JobDetails";
 
 // Mock data
 const jobData = [
@@ -94,11 +95,8 @@ function JobPostDetail() {
         {activeTab === 'Interviews' && (
           <InterviewsTab />
         )}
-        {activeTab === 'Job details' && (
-          <div className="mt-12">
-            <p className="text-lg text-gray-600">Job details will be displayed here.</p>
-          </div>
-        )}
+        {activeTab === "Job details" && <JobDetails />} 
+
       </div>
 
       {/* Modal handling */}

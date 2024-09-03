@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+"use client";
+import React, { useState, useEffect } from 'react';
 import { Button, Select, Input, Radio } from 'antd';
 import { CheckOutlined, CloseOutlined, PlusOutlined, DeleteOutlined, EditOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import Image from 'next/image';
@@ -8,9 +9,10 @@ const { TextArea } = Input;
 
 interface InterviewDesignSidebarProps {
   onClose: () => void;
+  onFinish: () => void;
 }
 
-const InterviewDesignSidebar: React.FC<InterviewDesignSidebarProps> = ({ onClose }) => {
+const InterviewDesignSidebar: React.FC<InterviewDesignSidebarProps> = ({ onClose, onFinish }) => {
   const [duration, setDuration] = useState<string>('30');
   const [expiration, setExpiration] = useState<string>('never');
   const [step, setStep] = useState<number>(1);
@@ -83,6 +85,20 @@ const InterviewDesignSidebar: React.FC<InterviewDesignSidebarProps> = ({ onClose
     setShowIntro(false);
   };
 
+  useEffect(() => {
+    const finishBtn = document.getElementById('finish-btn');
+    if (questions.length > 0) {
+      finishBtn?.removeAttribute('disabled');
+    } else {
+      finishBtn?.setAttribute('disabled', 'true');
+    }
+  }, [questions]);
+
+  const handleFinish = () => {
+    onFinish(); // Call the onFinish function passed as prop
+    onClose(); // Close the sidebar
+  };
+
   return (
     <div className="fixed inset-0 z-50 flex">
       <div className="fixed inset-0 bg-black bg-opacity-50" onClick={onClose}></div>
@@ -97,7 +113,7 @@ const InterviewDesignSidebar: React.FC<InterviewDesignSidebarProps> = ({ onClose
           {step === 2 && (
             <div className="flex items-center gap-2">
               <Button onClick={handlePrevious}>Previous</Button>
-              <Button type="primary" className="bg-blue-500">Finish</Button>
+              <Button type="primary"  id="finish-btn"  onClick={handleFinish} className="bg-blue-500">Finish</Button>
             </div>
           )}
         </div>
@@ -222,7 +238,7 @@ const InterviewDesignSidebar: React.FC<InterviewDesignSidebarProps> = ({ onClose
             {(!showIntro || showNewQuestionInput) && (
               <>
                 <Button 
-                  type="dashed" 
+                  type="primary" ghost
                   icon={<PlusOutlined />} 
                   onClick={handleAddNewQuestionClick}
                   className="bg-white w-full my-4"
